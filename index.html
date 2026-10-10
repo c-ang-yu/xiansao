@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F5F5F5">
+<title>测测你是闲与仙人扫落花里的谁</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --ink:#111111; --page:#F5F5F5; --card:#ffffff; --line:#e7e7e5;
+  --gray:#9a9a96; --faint:#c4c4c0;
+  --font:Arial,"Helvetica Neue","Songti SC","SimSun","NSimSun",serif;
+}
+html,body{height:100%;}
+body{background:#e8e8e6;font-family:var(--font);color:var(--ink);}
+button{font-family:var(--font);border:none;background:none;color:inherit;cursor:pointer;}
+.hidden{display:none !important;}
+
+.app{max-width:430px;margin:0 auto;min-height:100vh;min-height:100dvh;background:var(--page);position:relative;box-shadow:0 0 40px rgba(0,0,0,.08);}
+.view{display:none;min-height:100vh;min-height:100dvh;position:relative;padding-bottom:60px;}
+.view.active{display:block;animation:fadein .28s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* ---------- 头区 ---------- */
+.hero{height:33.3vh;height:33.3dvh;min-height:210px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:44px;}
+.hero.small{height:auto;min-height:0;padding:44px 20px 8px;}
+.book{font-size:11px;color:var(--gray);letter-spacing:4px;margin-bottom:14px;}
+.logo{font-size:32px;font-weight:700;letter-spacing:2px;}
+.logo-sub{margin-top:9px;font-size:10px;color:var(--gray);letter-spacing:6px;}
+.cap{text-align:center;font-size:11px;color:var(--gray);letter-spacing:4px;}
+.r-name{font-size:40px;font-weight:700;letter-spacing:6px;margin-top:10px;}
+.r-chip{margin-top:12px;display:inline-flex;align-items:center;justify-content:center;height:26px;padding:0 14px;border:1.2px solid var(--ink);border-radius:999px;font-size:12.5px;letter-spacing:2px;background:#fff;}
+
+.pad{padding:0 20px;}
+.card{background:var(--card);border-radius:20px;padding:18px 16px;box-shadow:0 2px 12px rgba(0,0,0,.05);margin-top:12px;}
+.sec-label{font-size:11px;color:var(--gray);letter-spacing:3px;margin:20px 0 10px;display:flex;align-items:center;gap:10px;}
+.sec-label::after{content:"";flex:1;height:1px;background:var(--line);}
+.card .sec-label:first-child{margin-top:0;}
+
+/* ---------- 首页 ---------- */
+#view-home{flex-direction:column;}
+#view-home.active{display:flex;}
+#view-home .pad{flex:1;display:flex;flex-direction:column;justify-content:flex-end;}
+.main-btn{margin-top:28px;width:100%;height:56px;border-radius:28px;background:var(--ink);color:#fff;font-size:17px;font-weight:700;letter-spacing:8px;text-indent:8px;box-shadow:0 6px 18px rgba(0,0,0,.18);transition:opacity .15s,transform .1s;}
+.main-btn:active{opacity:.85;transform:scale(.99);}
+.foot-note{text-align:center;font-size:11px;color:var(--faint);letter-spacing:2px;margin:16px 0 10px;}
+
+/* ---------- 答题 ---------- */
+.qwrap{padding:0 20px;}
+.qhead{display:flex;align-items:center;margin-top:6px;height:20px;}
+.qbar-bg{flex:1;height:4px;background:#e4e4e2;border-radius:2px;overflow:hidden;}
+.qbar{height:100%;background:var(--ink);border-radius:2px;width:0;transition:width .25s ease;}
+.qcount{margin-left:12px;font-size:11px;color:var(--gray);letter-spacing:1px;}
+.qback{margin-right:10px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--gray);}
+#q-dim{margin-top:22px;}
+.q-text{font-size:17px;line-height:1.9;color:#222;margin-top:2px;}
+.opts{margin-top:18px;display:flex;flex-direction:column;gap:10px;}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card);border-radius:16px;padding:14px 14px;font-size:14.5px;line-height:1.65;color:#333;box-shadow:0 2px 12px rgba(0,0,0,.05);transition:transform .1s;}
+.opt:active{transform:scale(.985);}
+.opt .key{flex:none;width:26px;height:26px;border-radius:50%;border:1.2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--gray);}
+.opt.sel{outline:2px solid var(--ink);}
+.opt.sel .key{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+/* ---------- 结果 ---------- */
+.dims{display:flex;flex-direction:column;gap:14px;}
+.dim .d-top{display:flex;justify-content:space-between;font-size:11px;color:var(--gray);letter-spacing:2px;}
+.dim .d-track{margin-top:6px;position:relative;height:6px;background:#ececea;border-radius:3px;}
+.dim .d-fill{position:absolute;top:0;height:6px;background:var(--ink);border-radius:3px;}
+.dim .d-dot{position:absolute;top:-4px;width:14px;height:14px;background:#fff;border:2.5px solid var(--ink);border-radius:50%;transform:translateX(-50%);}
+.r-line{margin-top:14px;text-align:center;font-size:13px;color:#333;letter-spacing:1px;}
+.verdict{font-size:14.5px;line-height:2.15;color:#333;}
+.vice{margin-top:10px;font-size:12.5px;color:var(--gray);line-height:1.9;}
+.vice b{color:#333;}
+.r-btns{display:flex;gap:12px;margin:22px 0 4px;}
+.rb{flex:1;height:48px;border-radius:24px;font-size:14.5px;letter-spacing:2px;}
+.rb.ghost{border:1.5px solid var(--ink);color:var(--ink);background:transparent;}
+.rb.solid{background:var(--ink);color:#fff;}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:104px;max-width:80%;background:rgba(17,17,17,.88);color:#fff;font-size:13px;letter-spacing:1px;padding:10px 20px;border-radius:999px;z-index:50;text-align:center;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ===== 首页 ===== -->
+  <section id="view-home" class="view active">
+    <header class="hero">
+      <p class="book">闲与仙人扫落花 · 归鸿落雪</p>
+      <h1 class="logo">你是闲扫里的谁</h1>
+      <p class="logo-sub">CHARACTER QUIZ</p>
+    </header>
+    <div class="pad">
+      <button id="btn-start" class="main-btn">开 始 测 试</button>
+      <p class="foot-note">十二问 · 十五位有缘人 · 仅供娱乐</p>
+    </div>
+  </section>
+
+  <!-- ===== 答题 ===== -->
+  <section id="view-quiz" class="view">
+    <div class="qwrap">
+      <div class="qhead">
+        <button id="q-back" class="qback">‹</button>
+        <div class="qbar-bg"><div class="qbar" id="qbar"></div></div>
+        <span class="qcount" id="qcount"></span>
+      </div>
+      <div class="sec-label" id="q-dim"></div>
+      <p class="q-text" id="q-text"></p>
+      <div class="opts" id="q-opts"></div>
+    </div>
+  </section>
+
+  <!-- ===== 结果 ===== -->
+  <section id="view-result" class="view">
+    <header class="hero small">
+      <p class="cap">你 的 灵 魂 是</p>
+      <h2 class="r-name" id="r-name"></h2>
+      <span class="r-chip" id="r-chip"></span>
+    </header>
+    <div class="pad">
+      <p class="sec-label">维 度 剖 析</p>
+      <div class="card"><div class="dims" id="r-dims"></div></div>
+      <p class="r-line" id="r-line"></p>
+      <p class="sec-label">判 词</p>
+      <div class="card">
+        <p class="verdict" id="r-verdict"></p>
+        <p class="vice" id="r-vice"></p>
+      </div>
+      <div class="r-btns">
+        <button id="btn-copy" class="rb ghost">复 制 结 果</button>
+        <button id="btn-retry" class="rb solid">再 测 一 次</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="toast" class="toast hidden"></div>
+</div>
+
+<script>
+/* ================= 数据 ================= */
+/* 维度：neg 为左极，pos 为右极 */
+const DIMS = [
+  {name:'情热', neg:'冷澜', pos:'炽热'},
+  {name:'处世', neg:'喜独', pos:'乐群'},
+  {name:'章法', neg:'随性', pos:'守序'},
+  {name:'心术', neg:'坦荡', pos:'深藏'},
+  {name:'道义', neg:'自在', pos:'担道'},
+  {name:'刚柔', neg:'柔韧', pos:'锋锐'},
+];
+
+/* 每维 2 题，dim 指向维度下标；选项 s 得分 ∈ {2,1,-1,-2} */
+const QUESTIONS = [
+  {dim:0, text:'遇到一件特别让你上头的事，你会——', opts:[
+    {t:'当场眉飞色舞，恨不得昭告天下', s:2},
+    {t:'跟亲近的人分享，越说越兴奋', s:1},
+    {t:'淡淡一笑，心里自己回味', s:-1},
+    {t:'风平浪静，谁也看不出来', s:-2},
+  ]},
+  {dim:0, text:'你在乎的人受了委屈，你会——', opts:[
+    {t:'怒气值直接拉满，当场替TA出头', s:2},
+    {t:'语气变得很冲，谁都看得出来', s:1},
+    {t:'不动声色，转头默默替TA清算', s:-1},
+    {t:'冷眼旁观，觉得TA该自己扛', s:-2},
+  ]},
+  {dim:1, text:'一场热闹的聚会，你的状态是——', opts:[
+    {t:'全场最靓，认识一半朋友一半', s:2},
+    {t:'玩得挺开心，也会有几个熟人', s:1},
+    {t:'找个角落待着，能早点走就早点走', s:-1},
+    {t:'能不去就不去，独处才是充电', s:-2},
+  ]},
+  {dim:1, text:'遇到烦心事，你更倾向于——', opts:[
+    {t:'找朋友倾诉，说出来就好一半', s:2},
+    {t:'边聊边想，聊着聊着就有主意了', s:1},
+    {t:'自己消化，等想明白了再说', s:-1},
+    {t:'谁也不告诉，一个人待着就好', s:-2},
+  ]},
+  {dim:2, text:'面对计划外的变故，你会——', opts:[
+    {t:'没有计划寸步难行，必须重新安排', s:2},
+    {t:'按预案调整，尽量回到正轨', s:-1},
+    {t:'有点烦躁，但也能随机应变', s:1},
+    {t:'兵来将挡，临时起意才有意思', s:-2},
+  ]},
+  {dim:2, text:'你的生活作息更接近——', opts:[
+    {t:'严格自律，日程精确到时刻', s:2},
+    {t:'有章有法，习惯了按部就班', s:1},
+    {t:'大体随缘，重要的事会留心', s:-1},
+    {t:'想到什么做什么，随性而为', s:-2},
+  ]},
+  {dim:3, text:'别人问起你的近况，你会——', opts:[
+    {t:'滴水不漏，说的都是想让你知道的', s:2},
+    {t:'拣着说，看人下菜碟', s:1},
+    {t:'大部分说实话，小部分打太极', s:-1},
+    {t:'有问必答，藏不住事', s:-2},
+  ]},
+  {dim:3, text:'你做重要决定时——', opts:[
+    {t:'步步藏机，真相只有自己清楚', s:2},
+    {t:'留几手底牌，关键处再亮', s:1},
+    {t:'事后会解释，过程不太藏着', s:-1},
+    {t:'想法全摆在桌面上，不怕人知道', s:-2},
+  ]},
+  {dim:4, text:'看到不公的事，你的第一反应是——', opts:[
+    {t:'这事我管定了，豁出去也要管', s:2},
+    {t:'力所能及就帮一把', s:1},
+    {t:'与我无关，各人有各人的命', s:-1},
+    {t:'别惹麻烦上身，绕着走', s:-2},
+  ]},
+  {dim:4, text:'对于"责任"两个字，你的态度是——', opts:[
+    {t:'认下的责任，拿命也要扛住', s:2},
+    {t:'该扛的扛，但不主动揽事', s:1},
+    {t:'自由最贵，别拿责任绑我', s:-1},
+    {t:'谁爱扛谁扛，我只图自在', s:-2},
+  ]},
+  {dim:5, text:'撞上正面冲突，你会——', opts:[
+    {t:'正面硬刚，寸步不让', s:2},
+    {t:'先声夺人，气势不能输', s:1},
+    {t:'绵里藏针，慢慢周旋', s:-1},
+    {t:'以退为进，柔能克刚', s:-2},
+  ]},
+  {dim:5, text:'被生活按在地上摩擦时，你——', opts:[
+    {t:'越挫越硬，宁折不弯', s:2},
+    {t:'咬着牙扛，不肯服软', s:1},
+    {t:'弯下腰，等风头过去再说', s:-1},
+    {t:'顺势而为，活着最大', s:-2},
+  ]},
+];
+
+/* 人物：title=称号 line=短句 text=判词（表面vs内里双面）
+   vice=次像；v = [情热,处世,章法,心术,道义,刚柔] -2..+2 */
+const CHARS = [
+  {name:'江顾', title:'斩情仙尊', line:'提剑下凡斩情丝，回首已是道中人。',
+   text:'你看起来清冷自持，规矩是尺，大道是岸，谁走近半步都要挨你的剑。可只有你知道，那把剑从来舍不得落在某人身上——嘴上说着斩情证道，转身却把最好的丹药、最狠的护持，全留给了那个让你破功的人。你的深情，是全场保密等级最高的秘密。',
+   vice:{name:'迢虚', why:'同样深藏不露、心狠果决'},
+   v:[-2,-1,2,1.5,1.5,2]},
+  {name:'卫风', title:'咸鱼真龙', line:'躺平三千载，一鸣动九天。',
+   text:'你嘴上全是"不想努力"，关键时刻却比谁都拼。看起来嘻嘻哈哈没心没肺，实则把每一份真心都刻在骨头里——谁给过你一粒糖，你能记着还人家一座山。别看你平时能跪能滚能求饶，真被逼到绝境时，你眼里的光比谁的都疯。',
+   vice:{name:'乌拓', why:'同样热忱直率、藏不住事'},
+   v:[2,2,-2,-1,-1,-1]},
+  {name:'江向云', title:'笑面执棋', line:'一壶茶里藏刀光，满座宾朋皆棋子。',
+   text:'你永远彬彬有礼，笑容恰到好处，谁见了都说你是个好人。可你的算盘打得比谁都深，每一句寒暄背后都有一页账本。你很少动真火，因为你很少输——除非撞上那个你看不透的人，那时你才肯承认，原来自己也有真心错付的时候。',
+   vice:{name:'长宁', why:'笑容背后各有被拿捏的软肋'},
+   v:[1,1,1,2,0,-1]},
+  {name:'陆离雨', title:'明骚卧底', line:'臭名昭著走偏门，一门心思向自由。',
+   text:'你活得张扬放肆，坏名声当通行证，从不指望谁理解。表面看你是无利不起早的浑人，其实心里门儿清：接近谁、离开谁、哪句是戏、哪句动情，你分得比谁都开。只是夜深时你也会想——那一回没算利弊的真心，算不算输。',
+   vice:{name:'逢疾', why:'同样随性张扬、直来直去'},
+   v:[1,0.5,-1.5,1,-1.5,1]},
+  {name:'萧清焰', title:'掌中君子', line:'温言养出凌云骨，一身枷锁一身光。',
+   text:'你是所有人眼里的谦谦君子，好脾气、会来事、永远得体。可没人问过你想不想——你的人生早被写好了剧本，连天赋都是被强行"修"出来的。你温柔，是因为反抗无用；你寻找姻缘，是想头一回亲手选一次自己的命。',
+   vice:{name:'永安', why:'同样温吞靠谱、一肩担事'},
+   v:[1,1.5,0,-0.5,2,-1.5]},
+  {name:'乌拓', title:'护主凶萌', line:'平时掉毛讨人嫌，亮爪方知是凶兽。',
+   text:'你贪吃、爱玩、心直口快，谁对你好你就黏谁，半点情绪都藏不住。看起来人畜无害人见人欺，可真到了护着的人出事那一刻，你会瞬间亮出獠牙，凶得连自己都吓一跳。你的世界很简单：给吃的，就是好人；动我的人，就是敌人。',
+   vice:{name:'卫风', why:'同样单纯热烈、护短拼命'},
+   v:[2,1,-1.5,-2,-2,1]},
+  {name:'长宁', title:'折节故人', line:'旧谊千斤难敌命，一步踏错即深渊。',
+   text:'你待人接物滴水不漏，是朋友圈里稳重可靠的那个。可你心里始终压着一段不敢说的旧账——有人捏着你的软肋，你走得再稳，也是在替别人走。你嫌弃过某些人"不干净"，后来才明白，最先弄脏自己的，是那个不敢回头的选择。',
+   vice:{name:'江向云', why:'同样把真心锁在最深处'},
+   v:[0,0,1,2,-1,1]},
+  {name:'紫光', title:'清醒闲人', line:'独钓寒潭观棋局，风吹不动是人心。',
+   text:'你与世无争，钓鱼遛鸟看云，谁都觉得你没野心。其实你只是看得太明白——烂事烂人，早点看清早点抽身。你不轻易站队，可真到朋友出事的关头，你递出去的手从没慢过。你的通透，一半是懒得计较，一半是早已把人心看穿。',
+   vice:{name:'天门', why:'同样不争不抢、乐得清闲'},
+   v:[0,-0.5,0.5,0,0.5,-0.5]},
+  {name:'逢疾', title:'莽直刀客', line:'心中不藏半句曲，出手便是雷霆声。',
+   text:'你心里存不住事，喜怒全写在脸上，说话冲得能把人噎死。你觉得拐弯抹角纯属浪费时间，认定的事拔腿就干。别人说你莽，你认——可正是你这把直来直去的刀，关键时刻从不掉链子。你的世界没有算计，只有干，和接着干。',
+   vice:{name:'乌拓', why:'同样心直口快、藏不住事'},
+   v:[1,1,-1,-1.5,1,2]},
+  {name:'常平安', title:'守灯之人', line:'一盏孤灯守一诺，不信人间有歧途。',
+   text:'你守规矩、认死理，交给你的事从不需要人催第二遍。你以为的忠诚，在别人眼里近乎执拗——可那盏灯是你自己选的，你就不许它灭。直到有一天你发现信仰的塔基上有裂缝，你才第一次学着问自己：守的究竟是灯，还是点灯的人。',
+   vice:{name:'萧清焰', why:'同样认定的道就守到底'},
+   v:[0,0,2,-1.5,2,0]},
+  {name:'迢虚', title:'幕后执子', line:'不爱人间爱棋局，翻云覆雨一袖中。',
+   text:'你冷眼看着人间，从不亲自下场，每一枚棋子都以为自己在自由行走。你不需要掌声，只需要棋盘按你的意思铺开。你以为自己无喜无悲、无懈可击——可越是算无遗策，越说明你怕：怕失控，怕真心，怕这盘棋之外你什么都不是。',
+   vice:{name:'江向云', why:'同样算计极深、不动声色'},
+   v:[-1.5,-1,1,2,-1.5,0]},
+  {name:'永安', title:'司命社畜', line:'操碎仙心三千万，月钱不见涨一文。',
+   text:'你是所有人眼里最靠谱的那个——操心、念叨、未雨绸缪，谁的烂摊子最后都落到你头上。你嘴上喊着想躺平，身体却诚实地把每件事安排得妥妥帖帖。别看你天天哀声叹气，真出了大事，第一个稳住阵脚的就是你：命可以苦，班必须上好。',
+   vice:{name:'萧清焰', why:'同样温润周全、默默扛事'},
+   v:[1,1,2,0,1.5,-1]},
+  {name:'寻绿', title:'记仇花妖', line:'一眼定情一瞬恨，半瓣温柔半瓣刺。',
+   text:'你爱憎分明得近乎极端：喜欢你时千娇百媚，负了你时寸草不生。看起来是娇滴滴的小妖精，其实心里的账本比谁都厚——谁伤过你，你追到天涯海角也要讨回来。你总说那是报仇，可你心里清楚，你只是咽不下那口气，和不甘心的那点真。',
+   vice:{name:'嵇婧莀', why:'同样为执念一根筋到底'},
+   v:[1.5,-1,-0.5,0,-2,0.5]},
+  {name:'天门', title:'傲娇门扉', line:'阅尽来往仙与凡，脾气比门槛还硬。',
+   text:'你话不多，脾气不小，谁让你不顺心你就给谁甩脸子。看起来你只是个摆设，其实你什么都看在眼里——谁真心、谁敷衍、谁在装，你门儿清。你嘴上嫌弃着所有人，身体却诚实地为每个人开合。你的温柔，属于那个会顺手推推你门轴的人。',
+   vice:{name:'紫光', why:'同样清静无为、各自安好'},
+   v:[-0.5,-1,-0.5,-1.5,0,0]},
+  {name:'嵇婧莀', title:'疯魔执母', line:'半生疯癫为一人，凤凰泣血不回头。',
+   text:'你炽烈、孤绝，认定的事九头牛都拉不回来。所有人都说你疯了，只有你知道自己清醒得很——你只是不肯放手。你把毕生的温柔都埋进一场执念里，哪怕它早已面目全非。若有一天执念放下了，你大概不知道，自己还剩下什么。',
+   vice:{name:'寻绿', why:'同样爱恨极端、执念入骨'},
+   v:[2,-1.5,-1,1,-1,1.5]},
+];
+
+/* ================= 逻辑 ================= */
+const $ = id => document.getElementById(id);
+let idx = 0;
+let answers = new Array(QUESTIONS.length).fill(null);
+let orders = [];
+let result = null;
+
+function shuffle(n){
+  const a = [...Array(n).keys()];
+  for(let i = n - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function cn(n){ const c='一二三四五六七八九十'; return n<=10?c[n-1]:(n<20?'十'+c[n-11]:c[Math.floor(n/10)-1]+'十'+c[n%10-1]); }
+
+function startQuiz(){
+  idx = 0;
+  answers.fill(null);
+  orders = QUESTIONS.map(() => shuffle(4));
+  show('quiz');
+  renderQ();
+}
+function show(name){
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  $('view-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function renderQ(){
+  const q = QUESTIONS[idx];
+  $('qbar').style.width = ((idx + 1) / QUESTIONS.length * 100) + '%';
+  $('qcount').textContent = (idx + 1) + ' / ' + QUESTIONS.length;
+  $('q-dim').textContent = '第 ' + cn(idx + 1) + ' 问 · ' + DIMS[q.dim].name;
+  $('q-text').textContent = q.text;
+  const box = $('q-opts');
+  box.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  orders[idx].forEach((oi, k) => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = '<span class="key">' + letters[k] + '</span>' + q.opts[oi].t;
+    b.onclick = () => pick(oi, b);
+    box.appendChild(b);
+  });
+  $('q-back').style.visibility = idx === 0 ? 'hidden' : 'visible';
+}
+function pick(oi, btn){
+  answers[idx] = QUESTIONS[idx].opts[oi].s;
+  [...$('q-opts').children].forEach(x => x.classList.remove('sel'));
+  btn.classList.add('sel');
+  setTimeout(() => {
+    if(idx < QUESTIONS.length - 1){ idx++; renderQ(); }
+    else finish();
+  }, 180);
+}
+
+function calcUser(){
+  const u = new Array(DIMS.length).fill(0);
+  QUESTIONS.forEach((q, i) => { u[q.dim] += answers[i]; });
+  return u;
+}
+function finish(){
+  const u = calcUser();
+  let best = -1e9, bi = 0;
+  CHARS.forEach((c, i) => {
+    const s = cosSim(u, c);
+    if(s > best){ best = s; bi = i; }
+  });
+  result = {c: CHARS[bi], u};
+  renderResult();
+  show('result');
+}
+function cosSim(u, c){
+  let dot = 0, nu = 0, nc = 0;
+  for(let i = 0; i < DIMS.length; i++){
+    dot += u[i]*c.v[i]; nu += u[i]*u[i]; nc += c.v[i]*c.v[i];
+  }
+  if(nu === 0) return -nc;   /* 全居中作答：归给范数最小的人物 */
+  return dot / Math.sqrt(nu * nc);
+}
+function renderResult(){
+  const c = result.c, u = result.u;
+  $('r-name').textContent = c.name;
+  $('r-chip').textContent = c.title;
+  $('r-verdict').textContent = c.text;
+  $('r-line').textContent = '「' + c.line + '」';
+  $('r-vice').innerHTML = '次像 · <b>' + c.vice.name + '</b> —— ' + c.vice.why;
+  const box = $('r-dims');
+  box.innerHTML = '';
+  DIMS.forEach((d, i) => {
+    const pct = (u[i] + 4) / 8 * 100;
+    const dotPct = (c.v[i] + 4) / 8 * 100;
+    const left = Math.min(pct, dotPct), w = Math.abs(pct - dotPct);
+    const div = document.createElement('div');
+    div.className = 'dim';
+    div.innerHTML =
+      '<div class="d-top"><span>' + d.neg + '</span><b>' + d.name + '</b><span>' + d.pos + '</span></div>' +
+      '<div class="d-track">' +
+        '<div class="d-fill" style="left:' + left + '%;width:' + w + '%;"></div>' +
+        '<div class="d-dot" style="left:' + dotPct + '%;"></div>' +
+      '</div>';
+    box.appendChild(div);
+  });
+}
+
+/* 绑定 */
+$('btn-start').onclick = startQuiz;
+$('btn-retry').onclick = startQuiz;
+$('q-back').onclick = () => { if(idx > 0){ idx--; renderQ(); } };
+$('btn-copy').onclick = () => {
+  const c = result.c;
+  const txt = '【测测你是闲扫里的谁】我的结果是：' + c.name + '（' + c.title + '）\n「' + c.line + '」';
+  (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(showToast).catch(() => {
+    const t = document.createElement('textarea');
+    t.value = txt; document.body.appendChild(t); t.select();
+    document.execCommand('copy'); t.remove(); showToast();
+  });
+};
+function showToast(){
+  const t = $('toast');
+  t.classList.remove('hidden');
+  setTimeout(() => t.classList.add('hidden'), 1600);
+}
+</script>
+</body>
+</html>
